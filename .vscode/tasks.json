@@ -1,0 +1,20 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "FastAPI Development Server",
+            "type": "shell",
+            "command": "fastapi dev --port 8000 src/neulander_api/api.py",
+            "problemMatcher": [
+                "$python"
+            ]
+        },
+        {
+            "label": "Port forward RabbitMQ",
+            "type": "shell",
+            "command": "kubectl port-forward service/lsc-rmq 5672:5672 -n rabbitmq",
+        },
+    ]
+}
