@@ -30,4 +30,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-neulander-core = { path = "../neulander-core" }
+neulander-core = { path = "../core" }

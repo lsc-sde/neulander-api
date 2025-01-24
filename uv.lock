@@ -1198,7 +1198,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.6" },
     { name = "faststream", extras = ["rabbit"], specifier = ">=0.5.33" },
-    { name = "neulander-core", directory = "../neulander-core" },
+    { name = "neulander-core", directory = "../core" },
 ]
 
 [package.metadata.requires-dev]
@@ -1215,7 +1215,7 @@ dev = [
 [[package]]
 name = "neulander-core"
 version = "0.1.0"
-source = { directory = "../neulander-core" }
+source = { directory = "../core" }
 dependencies = [
     { name = "pydantic" },
 ]
