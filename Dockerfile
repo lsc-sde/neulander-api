@@ -26,4 +26,5 @@ RUN uv add git+https://github.com/lsc-sde/neulander-core && uv sync --no-dev --n
 EXPOSE 8000
 
 # Run the application.
-CMD ["/home/appuser/.venv/bin/fastapi", "run", "src/neulander_api/api.py", "--port", "8000", "--host", "0.0.0.0"]
+ENV PATH="/home/appuser/.venv/bin:$PATH"
+CMD ["fastapi", "run", "src/neulander_api/api.py", "--port", "8000", "--host", "0.0.0.0"]
