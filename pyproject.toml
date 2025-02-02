@@ -1,6 +1,5 @@
 [project]
 name = "neulander-api"
-version = "0.1.0"
 description = "A FastAPI based API for the NeuLANDER project"
 readme = "README.md"
 authors = [{ name = "vvcb", email = "vvcb.n1@gmail.com" }]
@@ -10,6 +9,7 @@ dependencies = [
     "faststream[rabbit]>=0.5.33",
     "neulander-core",
 ]
+dynamic = ["version"]
 
 [project.scripts]
 neulander-api = "neulander_api:main"
@@ -17,6 +17,9 @@ neulander-api = "neulander_api:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/neulander_api/__init__.py"
 
 [dependency-groups]
 dev = [

@@ -1,17 +1,29 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-ENV UV_SYSTEM_PYTHON=1
+ENV UV_COMPILE_BYTECODE=1
 
-COPY ./pyproject.toml ./neulander-api/pyproject.toml
-COPY --from=neulander-core . ./neulander-core
+# Install git
+RUN apt-get update && apt-get install -y git
 
-RUN uv pip install --system -r ./neulander-api/pyproject.toml
+# Create a non-root user and group
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-COPY . ./neulander-api
+# Set the working directory
+WORKDIR /home/appuser
 
-WORKDIR /neulander-api
-RUN uv pip install --system -e .
+# Change ownership of the application directory
+RUN chown -R appuser:appuser /home/appuser
+
+# Switch to the non-root user
+USER appuser
+
+# Copy the application code
+COPY . /home/appuser
+
+RUN uv add git+https://github.com/lsc-sde/neulander-core && uv sync --no-dev --no-sources --frozen --no-cache
 
 EXPOSE 8000
-CMD fastapi run src/neulander_api/api.py --port 8000
+
+# Run the application.
+CMD ["/home/appuser/.venv/bin/fastapi", "run", "src/neulander_api/api.py", "--port", "8000", "--host", "0.0.0.0"]
