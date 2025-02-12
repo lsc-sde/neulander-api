@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "${workspaceFolder}/api/.venv/Scripts/python",
+    "python.defaultInterpreterPath": "${workspaceFolder}/api/.venv",
     "python.analysis.autoImportCompletions": true,
     "python.envFile": "${workspaceFolder}/api/.env",
     "python.terminal.activateEnvironment": true,

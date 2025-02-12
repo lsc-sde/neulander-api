@@ -1,3 +1,5 @@
+import asyncio
+import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
 from enum import Enum
@@ -74,9 +76,28 @@ async def lifespan(app: FastAPI):
     This context manager ensures that RabbitMQ queues are created if they don't already exist
     when the FastAPI application starts, and performs any necessary cleanup when the application stops.
     """
-    # Create RabbitMQ Queues if they don't already exist
-    await rabbit_router.broker.connect()
+    # Check if rabbitmq broker is available
+    # If not, try 2 more times before raising an exception
+    retries = 3
+    for attempt in range(retries):
+        try:
+            await rabbit_router.broker.connect()
+            break
+        except Exception as e:
+            if attempt < retries - 1:
+                backoff = 15 + attempt * 15
+                # Todo: Replace with logger
+                logging.warning(
+                    f"Retrying connection to RabbitMQ ({attempt + 1}/{retries}) in {backoff} seconds: {e}"
+                )
+                await asyncio.sleep(backoff)  # exponential(ish) backoff before retrying
+            else:
+                logging.error(
+                    f"Failed to connect to RabbitMQ after {retries} attempts: {e}"
+                )
+                raise
 
+    # Create RabbitMQ Queues if they don't already exist
     await rabbit_router.broker.declare_queue(q_medcat_14.qin)
     await rabbit_router.broker.declare_queue(q_medcat_14.qout)
     await rabbit_router.broker.declare_queue(q_medcat_14.qerr)
