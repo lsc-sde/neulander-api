@@ -78,10 +78,13 @@ async def lifespan(app: FastAPI):
     """
     # Check if rabbitmq broker is available
     # If not, try 2 more times before raising an exception
+    logging.info("Setting up lifespan events.")
+
     retries = 3
     for attempt in range(retries):
         try:
             await rabbit_router.broker.connect()
+            logging.info("Successfully connected to RabbitMQ.")
             break
         except Exception as e:
             if attempt < retries - 1:
